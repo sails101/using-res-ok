@@ -4,8 +4,7 @@
  * Usage:
  * return res.serverError();
  * return res.serverError(err);
- * return res.serverError(err, view);
- * return res.serverError(err, redirectTo);
+ * return res.serverError(err, 'some/specific/error/view');
  *
  * NOTE:
  * If something throws in a policy or controller, or an internal
@@ -38,23 +37,8 @@ module.exports = function serverError (data, options) {
 
   // If the user-agent wants JSON, always respond with JSON
   if (req.wantsJSON) {
-    return sendJSON(data);
+    return res.jsonx(data);
   }
-
-  // Make data more readable for view locals
-  var locals = {
-    data: (function readabilify (value) {
-      if (value===undefined) { return {}; }
-      else if (typeof value !== 'object') return {error: value};
-      else if (sails.util.isArray(value)) {
-        return sails.util.map(value, readabilify);
-      }
-      else if (sails.util.isPlainObject(value)) {
-        return sails.util.inspect(value);
-      }
-      else return value;
-    })(data)
-  };
 
   // If second argument is a string, we take that to mean it refers to a view.
   // If it was omitted, use an empty object (`{}`)
@@ -70,10 +54,23 @@ module.exports = function serverError (data, options) {
   // If no second argument provided, try to serve the default view,
   // but fall back to sending JSON(P) if any errors occur.
   else return res.view('500', { data: data }, function (err, html) {
+
+    // If a view error occured, fall back to JSON(P).
     if (err) {
+      //
+      // Additionally:
+      // • If the view was missing, ignore the error but provide a verbose log.
+      if (err.code === 'E_VIEW_FAILED') {
+        sails.log.verbose('res.serverError() :: Could not locate view for error page (sending JSON instead).  Details: ',err);
+      }
+      // Otherwise, if this was a more serious error, log to the console with the details.
+      else {
+        sails.log.warn('res.serverError() :: When attempting to render error page view, an error occured (sending JSON instead).  Details: ', err);
+      }
       return res.jsonx(data);
     }
-    else return res.send(html);
+
+    return res.send(html);
   });
 
 };

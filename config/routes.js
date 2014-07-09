@@ -168,6 +168,9 @@ module.exports.routes = {
   '/serverError/null/view'           : function (req, res) { res.serverError(null, 'homepage'); },
   '/serverError/undefined/view'      : function (req, res) { res.serverError(undefined, 'homepage'); },
 
+  '/serverError/deep': function (req, res) {
+    res.serverError(req);
+  }
 
   //////////////////////// res.forbidden() ////////////////////////
 
