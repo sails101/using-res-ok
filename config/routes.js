@@ -26,6 +26,8 @@ module.exports.routes = {
       'res.ok(undefined)': 'http://localhost:1337/undefined',
       'res.ok(\'nonexistent/view\')': 'http://localhost:1337/string',
       'res.ok(\'extant/view\')': 'http://localhost:1337/view',
+      'res.ok({ view: \'extant/view\' })': 'http://localhost:1337/object-with-extant-view',
+      'res.ok({ view: \'nonexistent/view\' })': 'http://localhost:1337/object-with-nonexistent-view',
 
       // 2-nary
       'res.ok({hello:\'world1\'}, {hello:\'world\'})': 'http://localhost:1337/object/object',
@@ -35,6 +37,15 @@ module.exports.routes = {
       'res.ok({hello:\'world1\'}, undefined)': 'http://localhost:1337/object/undefined',
       'res.ok({hello:\'world1\'}, \'nonexistent/view\')': 'http://localhost:1337/object/string',
       'res.ok({hello:\'world1\'}, \'extant/view\')': 'http://localhost:1337/object/view',
+      'res.ok({hello:\'world1\'}, { view: \'extant/view\' })': 'http://localhost:1337/object/object-with-extant-view',
+      'res.ok({hello:\'world1\'}, { view: \'nonexistent/view\' })': 'http://localhost:1337/object/object-with-nonexistent-view',
+
+      'res.ok(\'hello world\', \'extant/view\')': 'http://localhost:1337/string/view',
+      'res.ok(true, \'extant/view\')': 'http://localhost:1337/true/view',
+      'res.ok(false, \'extant/view\')': 'http://localhost:1337/false/view',
+      'res.ok(null, \'extant/view\')': 'http://localhost:1337/null/view',
+      'res.ok(undefined, \'extant/view\')': 'http://localhost:1337/undefined/view',
+
     });
   },
 
@@ -52,6 +63,8 @@ module.exports.routes = {
   '/undefined'    : function (req, res) { res.ok(undefined); },
   '/string'       : function (req, res) { res.ok('hello world'); },
   '/view'         : function (req, res) { res.ok('homepage'); },
+  '/object-with-extant-view': function (req, res) { res.ok({view: 'homepage'}); },
+  '/object-with-nonexistent-view': function (req, res) { res.ok({view:'hello world'}); },
 
 
   // 2-ary
@@ -63,7 +76,14 @@ module.exports.routes = {
   '/object/undefined'    : function (req, res) { res.ok({hello: 'world1'}, undefined); },
   '/object/string'       : function (req, res) { res.ok({hello: 'world1'}, 'hello world'); },
   '/object/view'         : function (req, res) { res.ok({hello: 'world1'}, 'homepage'); },
+  '/object/object-with-extant-view': function (req, res) { res.ok({hello: 'world1'},{view: 'homepage'}); },
+  '/object/object-with-nonexistent-view': function (req, res) { res.ok({hello: 'world1'},{view:'hello world'}); },
 
+  '/string/view'         : function (req, res) { res.ok('hello world', 'homepage'); },
+  '/true/view'           : function (req, res) { res.ok(true, 'homepage'); },
+  '/false/view'          : function (req, res) { res.ok(false, 'homepage'); },
+  '/null/view'           : function (req, res) { res.ok(null, 'homepage'); },
+  '/undefined/view'      : function (req, res) { res.ok(undefined, 'homepage'); },
 
   // -- Blueprints --
   // GET   /user
