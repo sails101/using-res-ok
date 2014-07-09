@@ -5,7 +5,6 @@
  * return res.notFound();
  * return res.notFound(err);
  * return res.notFound(err, view);
- * return res.notFound(err, redirectTo);
  *
  * e.g.:
  * ```
