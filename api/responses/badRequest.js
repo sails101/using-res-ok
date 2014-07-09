@@ -10,7 +10,7 @@
  * ```
  * return res.badRequest(
  *   'Please choose a valid `password` (6-12 characters)',
- *   '/trial/signup'
+ *   'trial/signup'
  * );
  * ```
  */
