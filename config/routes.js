@@ -81,6 +81,44 @@ module.exports.routes = {
         'res.serverError(false, \'extant/view\')': 'http://localhost:1337/serverError/false/view',
         'res.serverError(null, \'extant/view\')': 'http://localhost:1337/serverError/null/view',
         'res.serverError(undefined, \'extant/view\')': 'http://localhost:1337/serverError/undefined/view',
+        'res.serverError(req)': 'http://localhost:1337/serverError/deep',
+      },
+
+
+
+      '--- res.forbidden() ---': {
+
+        // 0-ary
+        'res.forbidden()': 'http://localhost:1337/forbidden/no-arguments',
+
+        // 1-ary
+        'res.forbidden({hello:\'world\'})': 'http://localhost:1337/forbidden/object',
+        'res.forbidden(true)': 'http://localhost:1337/forbidden/true',
+        'res.forbidden(false)': 'http://localhost:1337/forbidden/false',
+        'res.forbidden(null)': 'http://localhost:1337/forbidden/null',
+        'res.forbidden(undefined)': 'http://localhost:1337/forbidden/undefined',
+        'res.forbidden(\'nonexistent/view\')': 'http://localhost:1337/forbidden/string',
+        'res.forbidden(\'extant/view\')': 'http://localhost:1337/forbidden/view',
+        'res.forbidden({ view: \'extant/view\' })': 'http://localhost:1337/forbidden/object-with-extant-view',
+        'res.forbidden({ view: \'nonexistent/view\' })': 'http://localhost:1337/forbidden/object-with-nonexistent-view',
+
+        // 2-nary
+        'res.forbidden({hello:\'world1\'}, {hello:\'world\'})': 'http://localhost:1337/forbidden/object/object',
+        'res.forbidden({hello:\'world1\'}, true)': 'http://localhost:1337/forbidden/object/true',
+        'res.forbidden({hello:\'world1\'}, false)': 'http://localhost:1337/forbidden/object/false',
+        'res.forbidden({hello:\'world1\'}, null)': 'http://localhost:1337/forbidden/object/null',
+        'res.forbidden({hello:\'world1\'}, undefined)': 'http://localhost:1337/forbidden/object/undefined',
+        'res.forbidden({hello:\'world1\'}, \'nonexistent/view\')': 'http://localhost:1337/forbidden/object/string',
+        'res.forbidden({hello:\'world1\'}, \'extant/view\')': 'http://localhost:1337/forbidden/object/view',
+        'res.forbidden({hello:\'world1\'}, { view: \'extant/view\' })': 'http://localhost:1337/forbidden/object/object-with-extant-view',
+        'res.forbidden({hello:\'world1\'}, { view: \'nonexistent/view\' })': 'http://localhost:1337/forbidden/object/object-with-nonexistent-view',
+
+        'res.forbidden(\'hello world\', \'extant/view\')': 'http://localhost:1337/forbidden/string/view',
+        'res.forbidden(true, \'extant/view\')': 'http://localhost:1337/forbidden/true/view',
+        'res.forbidden(false, \'extant/view\')': 'http://localhost:1337/forbidden/false/view',
+        'res.forbidden(null, \'extant/view\')': 'http://localhost:1337/forbidden/null/view',
+        'res.forbidden(undefined, \'extant/view\')': 'http://localhost:1337/forbidden/undefined/view',
+        'res.forbidden(req)': 'http://localhost:1337/forbidden/deep',
       }
 
     });
@@ -167,20 +205,173 @@ module.exports.routes = {
   '/serverError/false/view'          : function (req, res) { res.serverError(false, 'homepage'); },
   '/serverError/null/view'           : function (req, res) { res.serverError(null, 'homepage'); },
   '/serverError/undefined/view'      : function (req, res) { res.serverError(undefined, 'homepage'); },
+  '/serverError/deep'                : function (req, res) { res.serverError(req); },
 
-  '/serverError/deep': function (req, res) {
-    res.serverError(req);
-  }
+
 
   //////////////////////// res.forbidden() ////////////////////////
+
+  // 0-ary
+  '/forbidden/no-arguments': function (req, res) {
+    return res.forbidden();
+  },
+
+  // 1-ary
+  '/forbidden/object'       : function (req, res) { res.forbidden({hello: 'world'}); },
+  '/forbidden/number'       : function (req, res) { res.forbidden(500); },
+  '/forbidden/true'         : function (req, res) { res.forbidden(true); },
+  '/forbidden/false'        : function (req, res) { res.forbidden(false); },
+  '/forbidden/null'         : function (req, res) { res.forbidden(null); },
+  '/forbidden/undefined'    : function (req, res) { res.forbidden(undefined); },
+  '/forbidden/string'       : function (req, res) { res.forbidden('hello world'); },
+  '/forbidden/view'         : function (req, res) { res.forbidden('homepage'); },
+  '/forbidden/object-with-extant-view': function (req, res) { res.forbidden({view: 'homepage'}); },
+  '/forbidden/object-with-nonexistent-view': function (req, res) { res.forbidden({view:'hello world'}); },
+
+
+  // 2-ary
+  '/forbidden/object/object'       : function (req, res) { res.forbidden({hello: 'world1'}, {hello: 'world'}); },
+  '/forbidden/object/number'       : function (req, res) { res.forbidden({hello: 'world1'}, 500); },
+  '/forbidden/object/true'         : function (req, res) { res.forbidden({hello: 'world1'}, true); },
+  '/forbidden/object/false'        : function (req, res) { res.forbidden({hello: 'world1'}, false); },
+  '/forbidden/object/null'         : function (req, res) { res.forbidden({hello: 'world1'}, null); },
+  '/forbidden/object/undefined'    : function (req, res) { res.forbidden({hello: 'world1'}, undefined); },
+  '/forbidden/object/string'       : function (req, res) { res.forbidden({hello: 'world1'}, 'hello world'); },
+  '/forbidden/object/view'         : function (req, res) { res.forbidden({hello: 'world1'}, 'homepage'); },
+  '/forbidden/object/object-with-extant-view': function (req, res) { res.forbidden({hello: 'world1'},{view: 'homepage'}); },
+  '/forbidden/object/object-with-nonexistent-view': function (req, res) { res.forbidden({hello: 'world1'},{view:'hello world'}); },
+
+  '/forbidden/string/view'         : function (req, res) { res.forbidden('hello world', 'homepage'); },
+  '/forbidden/true/view'           : function (req, res) { res.forbidden(true, 'homepage'); },
+  '/forbidden/false/view'          : function (req, res) { res.forbidden(false, 'homepage'); },
+  '/forbidden/null/view'           : function (req, res) { res.forbidden(null, 'homepage'); },
+  '/forbidden/undefined/view'      : function (req, res) { res.forbidden(undefined, 'homepage'); },
+  '/forbidden/deep'                : function (req, res) { res.forbidden(req); },
+
+
 
 
   //////////////////////// res.notFound() ////////////////////////
 
+  // 0-ary
+  '/notFound/no-arguments': function (req, res) {
+    return res.notFound();
+  },
+
+  // 1-ary
+  '/notFound/object'       : function (req, res) { res.notFound({hello: 'world'}); },
+  '/notFound/number'       : function (req, res) { res.notFound(500); },
+  '/notFound/true'         : function (req, res) { res.notFound(true); },
+  '/notFound/false'        : function (req, res) { res.notFound(false); },
+  '/notFound/null'         : function (req, res) { res.notFound(null); },
+  '/notFound/undefined'    : function (req, res) { res.notFound(undefined); },
+  '/notFound/string'       : function (req, res) { res.notFound('hello world'); },
+  '/notFound/view'         : function (req, res) { res.notFound('homepage'); },
+  '/notFound/object-with-extant-view': function (req, res) { res.notFound({view: 'homepage'}); },
+  '/notFound/object-with-nonexistent-view': function (req, res) { res.notFound({view:'hello world'}); },
+
+
+  // 2-ary
+  '/notFound/object/object'       : function (req, res) { res.notFound({hello: 'world1'}, {hello: 'world'}); },
+  '/notFound/object/number'       : function (req, res) { res.notFound({hello: 'world1'}, 500); },
+  '/notFound/object/true'         : function (req, res) { res.notFound({hello: 'world1'}, true); },
+  '/notFound/object/false'        : function (req, res) { res.notFound({hello: 'world1'}, false); },
+  '/notFound/object/null'         : function (req, res) { res.notFound({hello: 'world1'}, null); },
+  '/notFound/object/undefined'    : function (req, res) { res.notFound({hello: 'world1'}, undefined); },
+  '/notFound/object/string'       : function (req, res) { res.notFound({hello: 'world1'}, 'hello world'); },
+  '/notFound/object/view'         : function (req, res) { res.notFound({hello: 'world1'}, 'homepage'); },
+  '/notFound/object/object-with-extant-view': function (req, res) { res.notFound({hello: 'world1'},{view: 'homepage'}); },
+  '/notFound/object/object-with-nonexistent-view': function (req, res) { res.notFound({hello: 'world1'},{view:'hello world'}); },
+
+  '/notFound/string/view'         : function (req, res) { res.notFound('hello world', 'homepage'); },
+  '/notFound/true/view'           : function (req, res) { res.notFound(true, 'homepage'); },
+  '/notFound/false/view'          : function (req, res) { res.notFound(false, 'homepage'); },
+  '/notFound/null/view'           : function (req, res) { res.notFound(null, 'homepage'); },
+  '/notFound/undefined/view'      : function (req, res) { res.notFound(undefined, 'homepage'); },
+  '/notFound/deep'                : function (req, res) { res.notFound(req); },
+
+
+
 
   //////////////////////// res.badRequest() ////////////////////////
 
+  // 0-ary
+  '/badRequest/no-arguments': function (req, res) {
+    return res.badRequest();
+  },
+
+  // 1-ary
+  '/badRequest/object'       : function (req, res) { res.badRequest({hello: 'world'}); },
+  '/badRequest/number'       : function (req, res) { res.badRequest(500); },
+  '/badRequest/true'         : function (req, res) { res.badRequest(true); },
+  '/badRequest/false'        : function (req, res) { res.badRequest(false); },
+  '/badRequest/null'         : function (req, res) { res.badRequest(null); },
+  '/badRequest/undefined'    : function (req, res) { res.badRequest(undefined); },
+  '/badRequest/string'       : function (req, res) { res.badRequest('hello world'); },
+  '/badRequest/view'         : function (req, res) { res.badRequest('homepage'); },
+  '/badRequest/object-with-extant-view': function (req, res) { res.badRequest({view: 'homepage'}); },
+  '/badRequest/object-with-nonexistent-view': function (req, res) { res.badRequest({view:'hello world'}); },
+
+
+  // 2-ary
+  '/badRequest/object/object'       : function (req, res) { res.badRequest({hello: 'world1'}, {hello: 'world'}); },
+  '/badRequest/object/number'       : function (req, res) { res.badRequest({hello: 'world1'}, 500); },
+  '/badRequest/object/true'         : function (req, res) { res.badRequest({hello: 'world1'}, true); },
+  '/badRequest/object/false'        : function (req, res) { res.badRequest({hello: 'world1'}, false); },
+  '/badRequest/object/null'         : function (req, res) { res.badRequest({hello: 'world1'}, null); },
+  '/badRequest/object/undefined'    : function (req, res) { res.badRequest({hello: 'world1'}, undefined); },
+  '/badRequest/object/string'       : function (req, res) { res.badRequest({hello: 'world1'}, 'hello world'); },
+  '/badRequest/object/view'         : function (req, res) { res.badRequest({hello: 'world1'}, 'homepage'); },
+  '/badRequest/object/object-with-extant-view': function (req, res) { res.badRequest({hello: 'world1'},{view: 'homepage'}); },
+  '/badRequest/object/object-with-nonexistent-view': function (req, res) { res.badRequest({hello: 'world1'},{view:'hello world'}); },
+
+  '/badRequest/string/view'         : function (req, res) { res.badRequest('hello world', 'homepage'); },
+  '/badRequest/true/view'           : function (req, res) { res.badRequest(true, 'homepage'); },
+  '/badRequest/false/view'          : function (req, res) { res.badRequest(false, 'homepage'); },
+  '/badRequest/null/view'           : function (req, res) { res.badRequest(null, 'homepage'); },
+  '/badRequest/undefined/view'      : function (req, res) { res.badRequest(undefined, 'homepage'); },
+  '/badRequest/deep'                : function (req, res) { res.badRequest(req); },
+
+
+
 
   //////////////////////// res.negotiate() ////////////////////////
+
+  // 0-ary
+  '/negotiate/no-arguments': function (req, res) {
+    return res.negotiate();
+  },
+
+  // 1-ary
+  '/negotiate/object'       : function (req, res) { res.negotiate({hello: 'world'}); },
+  '/negotiate/number'       : function (req, res) { res.negotiate(500); },
+  '/negotiate/true'         : function (req, res) { res.negotiate(true); },
+  '/negotiate/false'        : function (req, res) { res.negotiate(false); },
+  '/negotiate/null'         : function (req, res) { res.negotiate(null); },
+  '/negotiate/undefined'    : function (req, res) { res.negotiate(undefined); },
+  '/negotiate/string'       : function (req, res) { res.negotiate('hello world'); },
+  '/negotiate/view'         : function (req, res) { res.negotiate('homepage'); },
+  '/negotiate/object-with-extant-view': function (req, res) { res.negotiate({view: 'homepage'}); },
+  '/negotiate/object-with-nonexistent-view': function (req, res) { res.negotiate({view:'hello world'}); },
+
+
+  // 2-ary
+  '/negotiate/object/object'       : function (req, res) { res.negotiate({hello: 'world1'}, {hello: 'world'}); },
+  '/negotiate/object/number'       : function (req, res) { res.negotiate({hello: 'world1'}, 500); },
+  '/negotiate/object/true'         : function (req, res) { res.negotiate({hello: 'world1'}, true); },
+  '/negotiate/object/false'        : function (req, res) { res.negotiate({hello: 'world1'}, false); },
+  '/negotiate/object/null'         : function (req, res) { res.negotiate({hello: 'world1'}, null); },
+  '/negotiate/object/undefined'    : function (req, res) { res.negotiate({hello: 'world1'}, undefined); },
+  '/negotiate/object/string'       : function (req, res) { res.negotiate({hello: 'world1'}, 'hello world'); },
+  '/negotiate/object/view'         : function (req, res) { res.negotiate({hello: 'world1'}, 'homepage'); },
+  '/negotiate/object/object-with-extant-view': function (req, res) { res.negotiate({hello: 'world1'},{view: 'homepage'}); },
+  '/negotiate/object/object-with-nonexistent-view': function (req, res) { res.negotiate({hello: 'world1'},{view:'hello world'}); },
+
+  '/negotiate/string/view'         : function (req, res) { res.negotiate('hello world', 'homepage'); },
+  '/negotiate/true/view'           : function (req, res) { res.negotiate(true, 'homepage'); },
+  '/negotiate/false/view'          : function (req, res) { res.negotiate(false, 'homepage'); },
+  '/negotiate/null/view'           : function (req, res) { res.negotiate(null, 'homepage'); },
+  '/negotiate/undefined/view'      : function (req, res) { res.negotiate(undefined, 'homepage'); },
+  '/negotiate/deep'                : function (req, res) { res.negotiate(req); }
 
 };
